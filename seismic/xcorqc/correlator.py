@@ -171,6 +171,8 @@ def process(data_source1, data_source2, output_path,
     netsta_list1 = str(netsta_list1)
     netsta_list2 = str(netsta_list2)
 
+    time_tag = UTCDateTime.now().strftime("%y-%m-%d.T%H.%M")
+
     comm = MPI.COMM_WORLD
     nproc = comm.Get_size()
     rank = comm.Get_rank()
@@ -182,7 +184,7 @@ def process(data_source1, data_source2, output_path,
     if (rank == 0):
         def outputConfigParameters():
             # output config parameters
-            fn = 'correlator.%s.cfg' % (UTCDateTime.now().strftime("%y-%m-%d.T%H.%M"))
+            fn = 'correlator.%s.cfg' % (time_tag)
             fn = os.path.join(output_path, fn)
 
             f = open(fn, 'w+')
@@ -220,6 +222,7 @@ def process(data_source1, data_source2, output_path,
 
     startTime = UTCDateTime(start_time)
     endTime = UTCDateTime(end_time)
+    print("Rank %s, time_tag %s"%(rank, time_tag))
     for pair in proc_stations[rank]:
         st1, st2 = pair
 
