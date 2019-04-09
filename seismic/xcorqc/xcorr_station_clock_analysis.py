@@ -16,7 +16,6 @@ import scipy
 from scipy import signal
 import matplotlib.dates
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_pdf import PdfPages
 from dateutil import rrule
 
 import obspy
@@ -412,6 +411,7 @@ def plot_xcorr_file_clock_analysis(src_file, asdf_dataset, time_window, snr_thre
 
     # Print and display
     if pdf_file is not None:
+        from matplotlib.backends.backend_pdf import PdfPages
         pdf_out = PdfPages(pdf_file)
         pdf_out.savefig(plt.gcf(), dpi=600)
         pdf_out.close()
@@ -422,4 +422,14 @@ def plot_xcorr_file_clock_analysis(src_file, asdf_dataset, time_window, snr_thre
     if show:
         plt.show()
 
-    plt.close()
+    # Need to clean all this up explicitly, otherwise huge memory leaks when run
+    # from ipython notebook.
+    ax1.clear()
+    ax2.clear()
+    ax3.clear()
+    ax4.clear()
+    ax5.clear()
+    ax6.clear()
+    fig.clf()
+    plt.close('all')
+
