@@ -207,6 +207,7 @@ def process(data_source1, data_source2, output_path,
             f.write('%25s\t\t: %s\n' % ('--one-bit-normalize', one_bit_normalize))
             f.write('%25s\t\t: %s\n' % ('--read-buffer-size', read_buffer_size))
             f.write('%25s\t\t: %s\n' % ('--envelope-normalize', envelope_normalize))
+            f.write('%25s\t\t: %s\n' % ('--whitening', whitening))
 
             f.close()
         # end func
@@ -222,7 +223,6 @@ def process(data_source1, data_source2, output_path,
 
     startTime = UTCDateTime(start_time)
     endTime = UTCDateTime(end_time)
-    print("Rank %s, time_tag %s"%(rank, time_tag))
     for pair in proc_stations[rank]:
         st1, st2 = pair
 
@@ -231,7 +231,7 @@ def process(data_source1, data_source2, output_path,
                                                         resample_rate, read_buffer_size, interval_seconds,
                                                         window_seconds, fmin, fmax, clip_to_2std, whitening,
                                                         one_bit_normalize, envelope_normalize, ensemble_stack,
-                                                        output_path, 2)
+                                                        output_path, 2, tracking_tag=time_tag)
     # end for
 # end func
 
