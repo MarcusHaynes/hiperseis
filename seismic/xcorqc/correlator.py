@@ -171,10 +171,6 @@ def process(data_source1, data_source2, output_path,
     netsta_list1 = str(netsta_list1)
     netsta_list2 = str(netsta_list2)
 
-    # Register time tag with high resolution, since queued jobs can readily
-    # commence around the same time.
-    time_tag = UTCDateTime.now().strftime("%y-%m-%d.T%H.%M.%S.%f")
-
     comm = MPI.COMM_WORLD
     nproc = comm.Get_size()
     rank = comm.Get_rank()
@@ -183,7 +179,12 @@ def process(data_source1, data_source2, output_path,
     ds2 = Dataset(data_source2, netsta_list2)
 
     proc_stations = []
+    time_tag = None
     if (rank == 0):
+        # Register time tag with high resolution, since queued jobs can readily
+        # commence around the same time.
+        time_tag = UTCDateTime.now().strftime("%y-%m-%d.T%H.%M.%S.%f")
+
         def outputConfigParameters():
             # output config parameters
             fn = 'correlator.%s.cfg' % (time_tag)
@@ -222,6 +223,7 @@ def process(data_source1, data_source2, output_path,
 
     # broadcast workload to all procs
     proc_stations = comm.bcast(proc_stations, root=0)
+    time_tag = comm.bcast(time_tag, root=0)
 
     startTime = UTCDateTime(start_time)
     endTime = UTCDateTime(end_time)
