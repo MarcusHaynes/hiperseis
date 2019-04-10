@@ -171,7 +171,9 @@ def process(data_source1, data_source2, output_path,
     netsta_list1 = str(netsta_list1)
     netsta_list2 = str(netsta_list2)
 
-    time_tag = UTCDateTime.now().strftime("%y-%m-%d.T%H.%M")
+    # Register time tag with high resolution, since queued jobs can readily
+    # commence around the same time.
+    time_tag = UTCDateTime.now().strftime("%y-%m-%d.T%H.%M.%S.%f")
 
     comm = MPI.COMM_WORLD
     nproc = comm.Get_size()
